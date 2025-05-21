@@ -1,0 +1,30 @@
+﻿<Window x:Class="FlooringSalesManager.Views.ProductListWindow"
+        xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
+        xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+        Title="Списък с продукти" Height="450" Width="700"
+        WindowStartupLocation="CenterScreen">
+    <Grid Margin="10">
+        <Grid.RowDefinitions>
+            <RowDefinition Height="Auto"/>
+            <RowDefinition Height="*"/>
+        </Grid.RowDefinitions>
+
+        <!-- Search Bar -->
+        <StackPanel Grid.Row="0" Orientation="Horizontal" Margin="0 0 0 10">
+            <Label Content="Търси:" VerticalAlignment="Center"/>
+            <TextBox x:Name="SearchBox" Width="200" Margin="5 0" VerticalAlignment="Center" TextChanged="SearchBox_TextChanged"/>
+        </StackPanel>
+
+        <!-- Product Grid -->
+        <DataGrid x:Name="ProductDataGrid" AutoGenerateColumns="False" IsReadOnly="True" Grid.Row="1">
+            <DataGrid.Columns>
+                <DataGridTextColumn Header="Номер" Binding="{Binding Number}" Width="*"/>
+                <DataGridTextColumn Header="Име" Binding="{Binding Name}" Width="*"/>
+                <DataGridTextColumn Header="Тип" Binding="{Binding Type}" Width="*"/>
+                <DataGridTextColumn Header="Цена (лв/м²)" Binding="{Binding PricePerSquareMeter}" Width="*"/>
+                <DataGridTextColumn Header="м² на кутия" Binding="{Binding M2PerBox}" Width="*"/>
+            </DataGrid.Columns>
+        </DataGrid>
+
+    </Grid>
+</Window>

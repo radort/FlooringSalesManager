@@ -8,6 +8,7 @@ using System.Windows.Media;
 using System.Windows.Media.Imaging;
 using System.Windows.Navigation;
 using System.Windows.Shapes;
+using FlooringSalesManager.Views;
 
 namespace FlooringSalesManager
 {
@@ -20,5 +21,23 @@ namespace FlooringSalesManager
         {
             InitializeComponent();
         }
+        private void NewOrder_Click(object sender, RoutedEventArgs e)
+        {
+            var window = new NewOrderWindow();
+            window.ShowDialog();
+        }
+
+        private void OrderList_Click(object sender, RoutedEventArgs e)
+        {
+            var window = new OrderListWindow();
+            window.ShowDialog();
+        }
+
+        private void ProductList_Click(object sender, RoutedEventArgs e)
+        {
+            var window = new ProductListWindow();
+            window.ShowDialog();
+        }
+
     }
 }
