@@ -1,0 +1,37 @@
+# Build output
+bin/
+obj/
+
+# Visual Studio
+.vs/
+*.user
+*.suo
+*.sln.docstates
+
+# Windows
+Thumbs.db
+ehthumbs.db
+Desktop.ini
+
+# User-specific files
+*.userosscache
+*.sln.docstates
+*.db
+*.sqlite
+*.log
+
+# Backup files
+*.bak
+*.tmp
+*.swp
+
+# Dotnet CLI artifacts
+*.pidb
+*.pdb
+
+# Other system files
+~$*
+
+# Excel generated files
+*.xlsx
+*.xls
