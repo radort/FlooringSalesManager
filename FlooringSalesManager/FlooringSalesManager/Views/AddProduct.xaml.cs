@@ -1,4 +1,5 @@
-﻿using FlooringSalesManager.Models; // Adjust if your namespace is different
+﻿using FlooringSalesManager.Models;
+using FlooringSalesManager.Data;
 using System;
 using System.Windows;
 using System.Windows.Controls;
@@ -7,21 +8,17 @@ namespace FlooringSalesManager.Views
 {
     public partial class AddProduct : Window
     {
-        public ProductBase NewProduct { get; private set; }
-
         public AddProduct()
         {
             InitializeComponent();
-            // Optionally select a default type
-            TypeComboBox.SelectedIndex = 0;
+            TypeComboBox.SelectedIndex = 0; // Default to first type
         }
 
-        // Show/hide fields depending on the selected type
         private void TypeComboBox_SelectionChanged(object sender, SelectionChangedEventArgs e)
         {
             var selectedType = (TypeComboBox.SelectedItem as ComboBoxItem)?.Content?.ToString();
 
-            if (selectedType == "Настилка")
+            if (selectedType == "Ламинат")
             {
                 FlooringFields.Visibility = Visibility.Visible;
                 SkirtingFields.Visibility = Visibility.Collapsed;
@@ -31,10 +28,9 @@ namespace FlooringSalesManager.Views
                 FlooringFields.Visibility = Visibility.Collapsed;
                 SkirtingFields.Visibility = Visibility.Visible;
             }
-            // Add logic for more types if needed
+            // Add more types if needed
         }
 
-        // Create the appropriate Product and close the window
         private void AddButton_Click(object sender, RoutedEventArgs e)
         {
             var selectedType = (TypeComboBox.SelectedItem as ComboBoxItem)?.Content?.ToString();
@@ -46,6 +42,8 @@ namespace FlooringSalesManager.Views
                 MessageBox.Show("Моля, попълнете всички полета.");
                 return;
             }
+
+            ProductBase newProduct;
 
             if (selectedType == "Ламинат")
             {
@@ -62,7 +60,7 @@ namespace FlooringSalesManager.Views
                     return;
                 }
 
-                NewProduct = new FlooringProduct
+                newProduct = new FlooringProduct
                 {
                     Number = NumberBox.Text,
                     Name = NameBox.Text,
@@ -86,7 +84,7 @@ namespace FlooringSalesManager.Views
                     return;
                 }
 
-                NewProduct = new SkirtingProduct
+                newProduct = new SkirtingProduct
                 {
                     Number = NumberBox.Text,
                     Name = NameBox.Text,
@@ -100,6 +98,12 @@ namespace FlooringSalesManager.Views
                 MessageBox.Show("Моля, изберете валиден тип продукт.");
                 return;
             }
+
+            // Add to SQLite database
+            ProductDatabase.AddProduct(newProduct);
+
+            // Optionally: show a confirmation
+            // MessageBox.Show("Продуктът е добавен успешно!");
 
             this.DialogResult = true;
             this.Close();

@@ -1,4 +1,5 @@
-﻿using FlooringSalesManager.Models;
+﻿using FlooringSalesManager.Data;
+using FlooringSalesManager.Models;
 using System.Collections.Generic;
 using System.Linq;
 using System.Windows;
@@ -7,19 +8,19 @@ namespace FlooringSalesManager.Views
 {
     public partial class ProductListWindow : Window
     {
-        private List<Product> _allProducts;
+        private List<ProductBase> _allProducts = new();
 
         public ProductListWindow()
         {
             InitializeComponent();
 
-            // Sample data for now
-            _allProducts = new List<Product>
-            {   
-                new Product { Id = 1, Name = "Дъб Мока", Type = "Ламинат", PricePerSquareMeter = 22.5m, M2PerBox = 2.4m },
-                new Product { Id = 2, Name = "Сив SPC", Type = "SPC", PricePerSquareMeter = 35.0m, M2PerBox = 1.9m }
-            };
+            // Load products from SQLite
+            LoadProductsFromDatabase();
+        }
 
+        private void LoadProductsFromDatabase()
+        {
+            _allProducts = ProductDatabase.GetAllProducts();
             ProductDataGrid.ItemsSource = _allProducts;
         }
 
@@ -34,6 +35,18 @@ namespace FlooringSalesManager.Views
                 .ToList();
             ProductDataGrid.ItemsSource = filtered;
         }
+
+        private void AddProduct_Click(object sender, RoutedEventArgs e)
+        {
+            var addWindow = new AddProduct();
+            if (addWindow.ShowDialog() == true)
+            {
+                _allProducts.Add(addWindow.NewProduct);
+                ProductDataGrid.ItemsSource = null; // Refresh the grid
+                ProductDataGrid.ItemsSource = _allProducts;
+            }
+        }
+
 
     }
 }
