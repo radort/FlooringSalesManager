@@ -9,11 +9,24 @@
             <RowDefinition Height="*"/>
         </Grid.RowDefinitions>
 
-        <!-- Search Bar -->
-        <StackPanel Grid.Row="0" Orientation="Horizontal" Margin="0 0 0 10">
-            <Label Content="Търси:" VerticalAlignment="Center"/>
-            <TextBox x:Name="SearchBox" Width="200" Margin="5 0" VerticalAlignment="Center" TextChanged="SearchBox_TextChanged"/>
-        </StackPanel>
+        <!-- Search Bar + add product button -->
+        <Grid Grid.Row="0" Margin="0 0 0 10">
+            <Grid.ColumnDefinitions>
+                <ColumnDefinition Width="Auto"/>
+                <ColumnDefinition Width="Auto"/>
+                <ColumnDefinition Width="*"/>
+            </Grid.ColumnDefinitions>
+
+            <Label Content="Търси:" VerticalAlignment="Center" Grid.Column="0"/>
+            <TextBox x:Name="SearchBox" Width="200" Margin="5 0" VerticalAlignment="Center" Grid.Column="1" TextChanged="SearchBox_TextChanged"/>
+            <Button Content="Добави продукт"
+            Width="120"
+            HorizontalAlignment="Right"
+            Grid.Column="2"
+            Click="AddProduct_Click"/>
+        </Grid>
+
+
 
         <!-- Product Grid -->
         <DataGrid x:Name="ProductDataGrid" AutoGenerateColumns="False" IsReadOnly="True" Grid.Row="1">

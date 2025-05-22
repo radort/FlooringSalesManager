@@ -12,7 +12,7 @@ using System.Windows.Media;
 using System.Windows.Media.Imaging;
 using System.Windows.Shapes;
 
-namespace FlooringSalesManager
+namespace FlooringSalesManager.Views
 {
     /// <summary>
     /// Interaction logic for NewOrderWindow.xaml
