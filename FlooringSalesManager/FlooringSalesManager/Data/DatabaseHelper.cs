@@ -1,6 +1,6 @@
 ﻿using Microsoft.Data.Sqlite;
-using System;
 using System.IO;
+using System.Diagnostics;
 
 namespace FlooringSalesManager.Data
 {
@@ -11,6 +11,8 @@ namespace FlooringSalesManager.Data
         public static SqliteConnection GetConnection()
         {
             Directory.CreateDirectory("Data");
+            string dbFullPath = Path.GetFullPath(DbFile);
+            Debug.WriteLine("SQLite DB path: " + dbFullPath);
             var connection = new SqliteConnection($"Data Source={DbFile}");
             connection.Open();
             return connection;
@@ -20,7 +22,6 @@ namespace FlooringSalesManager.Data
         {
             using var conn = GetConnection();
             using var cmd = conn.CreateCommand();
-
             cmd.CommandText = @"
 CREATE TABLE IF NOT EXISTS Products (
     Id INTEGER PRIMARY KEY AUTOINCREMENT,
@@ -33,9 +34,28 @@ CREATE TABLE IF NOT EXISTS Products (
     LengthPerPiece REAL
 );
 
--- You can add Orders table creation here later
+CREATE TABLE IF NOT EXISTS Orders (
+    OrderId INTEGER PRIMARY KEY AUTOINCREMENT,
+    OrderDate TEXT NOT NULL,
+    CustomerName TEXT,
+    CustomerPhone TEXT
+);
+
+CREATE TABLE IF NOT EXISTS OrderItems (
+    OrderItemId INTEGER PRIMARY KEY AUTOINCREMENT,
+    OrderId INTEGER NOT NULL,
+    ProductType TEXT NOT NULL,
+    ProductNumber TEXT NOT NULL,
+    Quantity REAL NOT NULL,
+    UnitPrice REAL NOT NULL,
+    FOREIGN KEY(OrderId) REFERENCES Orders(OrderId)
+);
+
+
+
 ";
             cmd.ExecuteNonQuery();
         }
+
     }
 }

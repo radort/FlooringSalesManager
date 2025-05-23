@@ -1,12 +1,81 @@
 ﻿<Window x:Class="FlooringSalesManager.Views.NewOrderWindow"
         xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
         xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
-        xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
-        xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
-        xmlns:local="clr-namespace:FlooringSalesManager"
-        mc:Ignorable="d"
-        Title="NewOrderWindow" Height="450" Width="800">
-    <Grid>
-        
+        Title="Нова поръчка" Height="600" Width="750"
+        WindowStartupLocation="CenterScreen">
+    <Grid Margin="14">
+        <Grid.RowDefinitions>
+            <RowDefinition Height="Auto"/>
+            <RowDefinition Height="*"/>
+            <RowDefinition Height="Auto"/>
+        </Grid.RowDefinitions>
+
+        <!-- Customer Details -->
+        <GroupBox Header="Данни на клиента" Margin="0 0 0 10">
+            <Grid Margin="8">
+                <Grid.ColumnDefinitions>
+                    <ColumnDefinition Width="Auto"/>
+                    <ColumnDefinition Width="200"/>
+                    <ColumnDefinition Width="Auto"/>
+                    <ColumnDefinition Width="200"/>
+                </Grid.ColumnDefinitions>
+                <Grid.RowDefinitions>
+                    <RowDefinition Height="Auto"/>
+                </Grid.RowDefinitions>
+
+                <Label Content="Име:" VerticalAlignment="Center"/>
+                <TextBox x:Name="CustomerNameBox" Grid.Column="1" Margin="6 0"/>
+
+                <Label Content="Телефон:" Grid.Column="2" VerticalAlignment="Center"/>
+                <TextBox x:Name="CustomerPhoneBox" Grid.Column="3" Margin="6 0"/>
+            </Grid>
+        </GroupBox>
+
+        <!-- Order Items -->
+        <GroupBox Header="Добави артикул към поръчката" Grid.Row="1">
+            <StackPanel Margin="8">
+                <WrapPanel Margin="0 0 0 8" VerticalAlignment="Center">
+                    <Label Content="Тип продукт:"/>
+                    <ComboBox x:Name="ProductTypeBox" Width="100" Margin="6 0" SelectedIndex="0"
+                              SelectionChanged="ProductTypeBox_SelectionChanged">
+                        <ComboBoxItem>Настилка</ComboBoxItem>
+                        <ComboBoxItem>Перваз</ComboBoxItem>
+                    </ComboBox>
+
+                    <Label Content="Номер:" Margin="14 0 0 0"/>
+                    <TextBox x:Name="ProductNumberBox" Width="90" Margin="6 0"/>
+
+                    <Label x:Name="QuantityLabel" Content="м²:" Margin="14 0 0 0"/>
+                    <TextBox x:Name="QuantityBox" Width="60" Margin="6 0"/>
+
+                    <Label Content="Цена:" Margin="14 0 0 0"/>
+                    <TextBox x:Name="UnitPriceBox" Width="80" Margin="6 0"/>
+
+                    <Button Content="Добави артикул" Margin="20 0 0 0" Click="AddItem_Click"/>
+                </WrapPanel>
+
+                <DataGrid x:Name="OrderItemsGrid" Height="200" AutoGenerateColumns="False" CanUserAddRows="False"
+                          Margin="0 10 0 0" IsReadOnly="True" SelectionMode="Single">
+                    <DataGrid.Columns>
+                        <DataGridTextColumn Header="Тип" Binding="{Binding ProductType}" Width="*"/>
+                        <DataGridTextColumn Header="Номер" Binding="{Binding ProductNumber}" Width="*"/>
+                        <DataGridTextColumn Header="Количество" Binding="{Binding Quantity}" Width="*"/>
+                        <DataGridTextColumn Header="Ед. цена" Binding="{Binding UnitPrice}" Width="*"/>
+                        <DataGridTemplateColumn Header="Премахни" Width="70">
+                            <DataGridTemplateColumn.CellTemplate>
+                                <DataTemplate>
+                                    <Button Content="-" Click="RemoveItem_Click" Padding="3 0"/>
+                                </DataTemplate>
+                            </DataGridTemplateColumn.CellTemplate>
+                        </DataGridTemplateColumn>
+                    </DataGrid.Columns>
+                </DataGrid>
+            </StackPanel>
+        </GroupBox>
+
+        <!-- Save Order Button -->
+        <StackPanel Grid.Row="2" Orientation="Horizontal" HorizontalAlignment="Right" Margin="0 12 0 0">
+            <Button Content="Запази поръчката" Padding="16 6" Click="SaveOrder_Click"/>
+        </StackPanel>
     </Grid>
 </Window>

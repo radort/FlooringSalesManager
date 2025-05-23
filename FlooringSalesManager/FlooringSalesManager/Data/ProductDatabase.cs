@@ -1,55 +1,19 @@
 ﻿using Microsoft.Data.Sqlite;
-using System;
 using System.Collections.Generic;
-using System.IO;
 using FlooringSalesManager.Models;
 
 namespace FlooringSalesManager.Data
 {
     public static class ProductDatabase
     {
-        private static readonly string DbFile = "Data/store.db";
-
-        static ProductDatabase()
-        {
-            EnsureTables();
-        }
-
-        public static SqliteConnection GetConnection()
-        {
-            Directory.CreateDirectory("Data");
-            var connection = new SqliteConnection($"Data Source={DbFile}");
-            connection.Open();
-            return connection;
-        }
-
-        public static void EnsureTables()
-        {
-            using var conn = GetConnection();
-            using var cmd = conn.CreateCommand();
-            cmd.CommandText = @"
-CREATE TABLE IF NOT EXISTS Products (
-    Id INTEGER PRIMARY KEY AUTOINCREMENT,
-    Number TEXT NOT NULL,
-    Name TEXT NOT NULL,
-    Type TEXT NOT NULL,
-    PricePerSquareMeter REAL,
-    M2PerBox REAL,
-    PricePerMeter REAL,
-    LengthPerPiece REAL
-);
-";
-            cmd.ExecuteNonQuery();
-        }
-
-        // CREATE
         public static void AddProduct(ProductBase product)
         {
-            using var conn = GetConnection();
+            using var conn = DatabaseHelper.GetConnection();
             using var cmd = conn.CreateCommand();
 
             cmd.CommandText = @"
-INSERT INTO Products (Number, Name, Type, PricePerSquareMeter, M2PerBox, PricePerMeter, LengthPerPiece)
+INSERT INTO Products 
+(Number, Name, Type, PricePerSquareMeter, M2PerBox, PricePerMeter, LengthPerPiece)
 VALUES ($num, $name, $type, $sqm, $m2box, $perMeter, $lenPiece)";
             cmd.Parameters.AddWithValue("$num", product.Number);
             cmd.Parameters.AddWithValue("$name", product.Name);
@@ -80,12 +44,11 @@ VALUES ($num, $name, $type, $sqm, $m2box, $perMeter, $lenPiece)";
             cmd.ExecuteNonQuery();
         }
 
-        // READ (All)
         public static List<ProductBase> GetAllProducts()
         {
             var products = new List<ProductBase>();
 
-            using var conn = GetConnection();
+            using var conn = DatabaseHelper.GetConnection();
             using var cmd = conn.CreateCommand();
             cmd.CommandText = "SELECT * FROM Products";
 
@@ -93,7 +56,7 @@ VALUES ($num, $name, $type, $sqm, $m2box, $perMeter, $lenPiece)";
             while (reader.Read())
             {
                 var type = reader.GetString(reader.GetOrdinal("Type"));
-                if (type == "Ламинат")
+                if (type == "Настилка")
                 {
                     products.Add(new FlooringProduct
                     {
@@ -117,15 +80,13 @@ VALUES ($num, $name, $type, $sqm, $m2box, $perMeter, $lenPiece)";
                         LengthPerPiece = reader.IsDBNull(reader.GetOrdinal("LengthPerPiece")) ? 0 : reader.GetDecimal(reader.GetOrdinal("LengthPerPiece"))
                     });
                 }
-                // Add more types as needed!
             }
             return products;
         }
 
-        // UPDATE
         public static void UpdateProduct(ProductBase product)
         {
-            using var conn = GetConnection();
+            using var conn = DatabaseHelper.GetConnection();
             using var cmd = conn.CreateCommand();
 
             cmd.CommandText = @"
@@ -168,10 +129,9 @@ WHERE Id = $id";
             cmd.ExecuteNonQuery();
         }
 
-        // DELETE
         public static void DeleteProduct(int productId)
         {
-            using var conn = GetConnection();
+            using var conn = DatabaseHelper.GetConnection();
             using var cmd = conn.CreateCommand();
 
             cmd.CommandText = "DELETE FROM Products WHERE Id = $id";
